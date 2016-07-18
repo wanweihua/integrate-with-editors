@@ -1,0 +1,6 @@
+multipart:
+  maxFileSize: 25MB
+  maxRequestSize: 25MB
+
+storage:
+  path: "storage"
