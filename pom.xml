@@ -37,6 +37,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.3.6.RELEASE</version>
                 <configuration>
                     <executable>true</executable>
                     <finalName>integrate-with-editors</finalName>
