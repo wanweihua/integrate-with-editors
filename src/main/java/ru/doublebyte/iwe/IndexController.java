@@ -1,20 +1,17 @@
 package ru.doublebyte.iwe;
 
-import com.google.common.io.ByteStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.doublebyte.iwe.types.Document;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
+import ru.doublebyte.iwe.types.DocumentWithData;
 
 @Controller
 @RequestMapping("/")
@@ -83,19 +80,22 @@ public class IndexController {
     }
 
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-    public void get(
-            @PathVariable("id") Long id,
-            HttpServletResponse response
+    @ResponseBody
+    public ResponseEntity<?> get(
+            @PathVariable("id") Long id
     ) {
         try {
-            Document document = documentService.get(id);
-            File file = documentService.getFile(id); //TODO make better
+            DocumentWithData documentWithData = documentService.getFile(id);
+            if(documentWithData == null) {
+                throw new Exception("Document not found: " + id);
+            }
 
-            response.setHeader("Content-Disposition", "attachment; filename=" + document.getName());
-            ByteStreams.copy(new FileInputStream(file), response.getOutputStream());
-            response.flushBuffer();
+            return ResponseEntity.ok()
+                    .header("Content-Disposition", "attachment; filename=" + documentWithData.getDocument().getName())
+                    .body(new InputStreamResource(documentWithData.getInputStream()));
         } catch(Exception e) {
-            throw new RuntimeException("Foo");
+            logger.error("Get file error", e);
+            return ResponseEntity.notFound().build();
         }
     }
 

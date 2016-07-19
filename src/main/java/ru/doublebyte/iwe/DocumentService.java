@@ -10,8 +10,8 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.doublebyte.iwe.repositories.DocumentRepository;
 import ru.doublebyte.iwe.types.Document;
 import ru.doublebyte.iwe.types.DocumentType;
+import ru.doublebyte.iwe.types.DocumentWithData;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -99,7 +99,12 @@ public class DocumentService {
         }
     }
 
-    public File getFile(Long id) {
+    /**
+     * Get document file data
+     * @param id Document id
+     * @return Document with data
+     */
+    public DocumentWithData getFile(Long id) {
         try {
             Document document = documentRepository.findOne(id);
             if(document == null) {
@@ -113,7 +118,7 @@ public class DocumentService {
                 return null;
             }
 
-            return documentPath.toFile();
+            return new DocumentWithData(document, Files.newInputStream(documentPath));
         } catch(Exception e) {
             logger.error("Document get file error", e);
             return null;
