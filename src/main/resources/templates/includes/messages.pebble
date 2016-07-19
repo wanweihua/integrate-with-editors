@@ -1,0 +1,9 @@
+<div class="messages">
+    {% if not delete_message is empty %}
+        <p class="alert alert-info">{{ delete_message }}</p>
+    {% endif %}
+
+    {% if not upload_message is empty %}
+        <p class="alert alert-info">{{ upload_message }}</p>
+    {% endif %}
+</div>

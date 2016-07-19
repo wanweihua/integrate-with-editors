@@ -5,11 +5,8 @@
 {% endblock %}
 
 {% block content %}
-    <div class="alert alert-info">
-        TODO - files list
-    </div>
-
+    {% include "includes/messages" %}
+    {% include "includes/document_list" %}
     <br>
-
     {% include "includes/upload_form" %}
 {% endblock %}

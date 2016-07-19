@@ -43,6 +43,11 @@
             <artifactId>pebble-spring-boot-starter</artifactId>
             <version>${pebble.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.webjars.bower</groupId>

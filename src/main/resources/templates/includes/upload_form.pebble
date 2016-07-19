@@ -2,10 +2,6 @@
     <h4>Upload document</h4>
     <hr>
 
-    {% if not upload_message is empty %}
-        <p class="text-info">{{ upload_message }}</p>
-    {% endif %}
-
     <form action="upload" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <input type="file" id="document-upload-input" name="document">
