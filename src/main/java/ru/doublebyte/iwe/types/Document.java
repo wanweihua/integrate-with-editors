@@ -1,10 +1,22 @@
 package ru.doublebyte.iwe.types;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "documents")
 public class Document {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @Column(name = "storage_id")
     private String storageId;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "type")
     private DocumentType type;
 
     ///////////////////////////////////////////////////////////////////////////
@@ -21,11 +33,8 @@ public class Document {
 
     @Override
     public String toString() {
-        return "Document{" +
-                "storageId='" + storageId + '\'' +
-                ", name='" + name + '\'' +
-                ", type=" + type +
-                '}';
+        return String.format("Document[id=%d, storageId=%s, name=%s, type=%s]",
+                id, storageId, name, type);
     }
 
     ///////////////////////////////////////////////////////////////////////////

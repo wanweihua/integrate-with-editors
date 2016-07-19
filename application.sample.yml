@@ -1,6 +1,18 @@
+#Upload limits
 multipart:
   maxFileSize: 25MB
   maxRequestSize: 25MB
 
+#Database connection
+spring.datasource:
+  driver-class: org.h2.Driver
+  url: jdbc:h2:./integrationdb
+  username: sa
+  password:
+
+#H2 console
+spring.h2.console.enabled: false
+
+#Document storage settings
 storage:
   path: "storage"

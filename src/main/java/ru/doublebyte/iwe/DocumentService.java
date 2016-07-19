@@ -2,9 +2,11 @@ package ru.doublebyte.iwe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.doublebyte.iwe.repositories.DocumentRepository;
 import ru.doublebyte.iwe.types.Document;
 import ru.doublebyte.iwe.types.DocumentType;
 
@@ -18,8 +20,17 @@ public class DocumentService {
 
     private static final Logger logger = LoggerFactory.getLogger(DocumentService.class);
 
+    private DocumentRepository documentRepository;
+
     @Value("${storage.path}")
     private String storagePath;
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    @Autowired
+    public DocumentService(DocumentRepository documentRepository) {
+        this.documentRepository = documentRepository;
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -34,7 +45,13 @@ public class DocumentService {
 
         logger.info("Upload of document {}", document.toString());
 
-        //TODO save document record
+        try {
+            Document savedDocument = documentRepository.save(document);
+            logger.info("Saved document with id {}", savedDocument.getId());
+        } catch(Exception e) {
+            logger.error("Document save error", e);
+            throw new Exception("Document save error", e);
+        }
 
         try {
             save(storageId, file.getBytes());

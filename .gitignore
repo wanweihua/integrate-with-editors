@@ -1,6 +1,7 @@
 .idea
 *.iml
 
-target
-application.yml
-storage
+/target
+/application.yml
+/storage
+/*.db

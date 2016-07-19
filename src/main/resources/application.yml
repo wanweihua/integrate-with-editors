@@ -1,0 +1,4 @@
+#Do not generate DDL
+spring.jpa:
+  generate-ddl: false
+  hibernate.ddl-auto: none
