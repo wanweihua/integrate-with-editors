@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+
+    {% block libs %}{% endblock %}
+
+    <title>
+        {% block title %}Integrate with editors{% endblock %}
+    </title>
+</head>
+<body>
+    {% block content %}Page content{% endblock %}
+</body>
+</html>

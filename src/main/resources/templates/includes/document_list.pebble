@@ -2,6 +2,9 @@
     .document-link {
         font-size: 1.5em;
     }
+    .form-inline {
+        display: inline-block;
+    }
 </style>
 
 <div class="document-list">
@@ -17,13 +20,18 @@
         {% for document in documents %}
             <li class="list-group-item">
 
-                <a href="#"
+                <a href="edit/{{ document.id }}"
                    class="document-link"
                    target="_blank">
                     {{ document.name }}
                 </a>
 
                 <div class="pull-right">
+                    <a href="get/{{ document.id }}" class="btn btn-default">
+                        <span class="text-info">
+                            <i class="glyphicon glyphicon-download"></i> Download
+                        </span>
+                    </a>
                     <form action="delete" method="post" class="form-inline">
                         <input type="hidden" name="id" value="{{ document.id }}">
                         <button type="submit" class="btn btn-default">

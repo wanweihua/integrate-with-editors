@@ -11,6 +11,7 @@ import ru.doublebyte.iwe.repositories.DocumentRepository;
 import ru.doublebyte.iwe.types.Document;
 import ru.doublebyte.iwe.types.DocumentType;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -81,6 +82,41 @@ public class DocumentService {
         } catch(Exception e) {
             logger.error("Document delete error", e);
             throw new Exception("Document delete error", e);
+        }
+    }
+
+    /**
+     * Get document by id
+     * @param id Document id
+     * @return Document
+     */
+    public Document get(Long id) {
+        try {
+            return documentRepository.findOne(id);
+        } catch(Exception e) {
+            logger.error("Document get error", e);
+            return null;
+        }
+    }
+
+    public File getFile(Long id) {
+        try {
+            Document document = documentRepository.findOne(id);
+            if(document == null) {
+                logger.warn("Document not found: {}", id);
+                return null;
+            }
+
+            Path documentPath = getDocumentPath(document.getStorageId());
+            if(!Files.exists(documentPath)) {
+                logger.warn("Document file not exist: {}", id);
+                return null;
+            }
+
+            return documentPath.toFile();
+        } catch(Exception e) {
+            logger.error("Document get file error", e);
+            return null;
         }
     }
 

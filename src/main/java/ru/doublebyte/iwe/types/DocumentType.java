@@ -4,27 +4,40 @@ package ru.doublebyte.iwe.types;
  * Document types suitable for document server
  */
 public enum DocumentType {
-    docx,
-    xlsx,
-    pptx,
-    doc,
-    xls,
-    ppt,
-    pps,
-    odt,
-    ods,
-    odp,
-    txt,
-    rtf,
-    csv,
-    mht,
-    html,
-    htm,
-    epub,
-    pdf,
-    djvu,
-    xps,
-    unknown; //special type
+    docx(EditorType.text),
+    doc(EditorType.text),
+    odt(EditorType.text),
+    txt(EditorType.text),
+    rtf(EditorType.text),
+    mht(EditorType.text),
+    html(EditorType.text),
+    htm(EditorType.text),
+    epub(EditorType.text),
+    pdf(EditorType.text),
+    djvu(EditorType.text),
+    xps(EditorType.text),
+
+    xlsx(EditorType.spreadsheet),
+    xls(EditorType.spreadsheet),
+    ods(EditorType.spreadsheet),
+    csv(EditorType.spreadsheet),
+
+    pptx(EditorType.presentation),
+    ppt(EditorType.presentation),
+    pps(EditorType.presentation),
+    odp(EditorType.presentation),
+
+    unknown(EditorType.text); //special type
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    private EditorType editorType;
+
+    DocumentType(EditorType editorType) {
+        this.editorType = editorType;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
 
     /**
      * Get document type by it's extension
@@ -47,9 +60,14 @@ public enum DocumentType {
         return unknown;
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+
     @Override
     public String toString() {
         return this.name();
     }
 
+    public EditorType getEditorType() {
+        return editorType;
+    }
 }
