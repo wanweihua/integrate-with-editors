@@ -3,6 +3,7 @@ package ru.doublebyte.iwe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,9 @@ public class IndexController {
 
     private DocumentService documentService;
 
+    @Value("${editors.url}")
+    private String editorsUrl;
+
     @Autowired
     public IndexController(DocumentService documentService) {
         this.documentService = documentService;
@@ -31,7 +35,7 @@ public class IndexController {
     }
 
     @RequestMapping(path = "/upload", method = RequestMethod.POST)
-    public String uploadDocument(
+    public String upload(
             @RequestParam("document") MultipartFile document,
             RedirectAttributes redirectAttributes
     ) {

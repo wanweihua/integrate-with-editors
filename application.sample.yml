@@ -16,3 +16,7 @@ spring.h2.console.enabled: false
 #Document storage settings
 storage:
   path: "storage"
+
+#Editors settings
+editors:
+  url: "http://localhost:8081"

@@ -14,7 +14,6 @@ import ru.doublebyte.iwe.types.DocumentType;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -50,18 +49,18 @@ public class DocumentService {
         logger.info("Upload of document {}", document.toString());
 
         try {
+            save(storageId, file.getBytes());
+        } catch(Exception e) {
+            logger.error("Document upload error", e);
+            throw new Exception("Document upload error", e);
+        }
+
+        try {
             Document savedDocument = documentRepository.save(document);
             logger.info("Saved document with id {}", savedDocument.getId());
         } catch(Exception e) {
             logger.error("Document save error", e);
             throw new Exception("Document save error", e);
-        }
-
-        try {
-            save(storageId, file.getBytes());
-        } catch(Exception e) {
-            logger.error("Document upload error", e);
-            throw new Exception("Document upload error", e);
         }
     }
 
