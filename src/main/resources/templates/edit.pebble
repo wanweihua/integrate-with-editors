@@ -40,12 +40,14 @@
                 document: {
                     fileType: "{{ document.type }}",
                     title: "{{ document.name }}",
-                    url: "{{ self_url }}/get/{{ document.id }}"
+                    url: "{{ self_url }}/get/{{ document.id }}",
+                    key: "{{ document.storageId }}"
                 },
 
                 editorConfig: {
                     lang: "ru",
-                    mode: "edit"
+                    mode: "edit",
+                    callbackUrl: "{{ self_url }}/notify/{{ document.id }}"
                 }
             };
 

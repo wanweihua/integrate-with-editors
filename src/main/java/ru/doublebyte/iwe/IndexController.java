@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.doublebyte.iwe.types.DocumentWithData;
+import ru.doublebyte.iwe.types.EditorRequest;
+import ru.doublebyte.iwe.types.EditorResponse;
 
 @Controller
 @RequestMapping("/")
@@ -97,6 +99,30 @@ public class IndexController {
             logger.error("Get file error", e);
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @RequestMapping(value = "/notify/{id}", method = RequestMethod.POST)
+    @ResponseBody
+    public EditorResponse notify(
+            @PathVariable("id") Long id,
+            @RequestBody EditorRequest editorRequest
+            ) {
+        logger.info("notify id={}, request={}", id, editorRequest.toString());
+
+        if(editorRequest.getStatus() == 2 || editorRequest.getStatus() == 6) {
+            logger.info("Saving edited document: {}", id);
+
+            if(editorRequest.getUrl() == null) {
+                logger.warn("document save url is null: {}", id);
+                return new EditorResponse(0);
+            }
+
+            try {
+                documentService.download(id, editorRequest.getKey(), editorRequest.getUrl());
+            } catch(Exception ignored) {}
+        }
+
+        return new EditorResponse(0);
     }
 
 }

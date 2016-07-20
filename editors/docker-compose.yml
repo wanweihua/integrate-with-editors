@@ -1,0 +1,10 @@
+version: "2"
+
+services:
+  documentserver:
+    image: "onlyoffice/documentserver:latest"
+    container_name: "oo_documentserver"
+    ports:
+    - "80:80"
+    stdin_open: yes
+    tty: yes

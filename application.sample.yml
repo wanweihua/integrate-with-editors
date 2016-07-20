@@ -19,4 +19,5 @@ storage:
 
 #Editors settings
 editors:
-  url: "http://localhost:8081"
+  self_url: "http://loclahost:8080"
+  url: "http://localhost:80"

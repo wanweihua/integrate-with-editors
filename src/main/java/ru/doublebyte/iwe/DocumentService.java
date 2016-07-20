@@ -5,7 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import ru.doublebyte.iwe.repositories.DocumentRepository;
 import ru.doublebyte.iwe.types.Document;
@@ -135,6 +138,52 @@ public class DocumentService {
         Collections.sort(documents, (a, b) -> a.getName().compareTo(b.getName()));
 
         return documents;
+    }
+
+    /**
+     * Download edited document by URL
+     * @param id Document id
+     * @param key Editing key (same as storage id)
+     * @param url Download URL
+     */
+    public void download(Long id, String key, String url) throws Exception {
+        logger.info("Downloading document: {}", id);
+
+        try {
+            Document document = documentRepository.findOne(id);
+            if(document == null) {
+                throw new Exception("Document not found: " + id);
+            }
+
+            if(!document.getStorageId().equals(key)) {
+                throw new Exception(String.format("Key %s not equals to storage id %s of document %d",
+                        key, document.getStorageId(), id));
+            }
+
+            RestTemplate restTemplate = new RestTemplate();
+            restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_OCTET_STREAM));
+
+            HttpEntity<String> request = new HttpEntity<>(headers);
+
+            ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET, request, byte[].class);
+
+            if(!response.getStatusCode().equals(HttpStatus.OK)) {
+                throw new Exception("Failed to download doucument: " + id);
+            }
+
+            Path documentPath = getDocumentPath(document.getStorageId());
+            Files.write(documentPath, response.getBody());
+
+            logger.info("Document downloaded and saved: {}", id);
+
+            //TODO by document name in URL rename document in DB (e.g. odt -> docx)
+        } catch(Exception e) {
+            logger.error("Document download error", e);
+            throw new Error("Document download error", e);
+        }
     }
 
     ///////////////////////////////////////////////////////////////////////////
