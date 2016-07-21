@@ -20,9 +20,7 @@ import ru.doublebyte.iwe.types.DocumentWithData;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Date;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -52,6 +50,7 @@ public class DocumentService {
      */
     public void upload(MultipartFile file) throws Exception {
         Document document = newDocument(file.getOriginalFilename());
+        document.setEditDate(LocalDateTime.now());
 
         logger.info("Upload of document {}", document.toString());
 
@@ -165,7 +164,7 @@ public class DocumentService {
                 document = newDocument(newFileName);
             }
 
-            document.setEditDate(new Date(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) * 1000L));
+            document.setEditDate(LocalDateTime.now());
             document = documentRepository.save(document);
 
             RestTemplate restTemplate = new RestTemplate();

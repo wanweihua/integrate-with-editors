@@ -27,7 +27,7 @@
                 </a>
 
                 <span class="text-muted">
-                    {{ document.editDate | date("HH:mm:ss dd.MM.yyyy") }}
+                    {{ document.editDate.toString() }}
                 </span>
 
                 <div class="pull-right">

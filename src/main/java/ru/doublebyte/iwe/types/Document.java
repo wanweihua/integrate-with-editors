@@ -1,7 +1,7 @@
 package ru.doublebyte.iwe.types;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "documents")
@@ -21,7 +21,7 @@ public class Document {
     private DocumentType type;
 
     @Column(name = "edit_date")
-    private Date editDate;
+    private LocalDateTime editDate;
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -75,11 +75,11 @@ public class Document {
         this.type = type;
     }
 
-    public Date getEditDate() {
+    public LocalDateTime getEditDate() {
         return editDate;
     }
 
-    public void setEditDate(Date editDate) {
+    public void setEditDate(LocalDateTime editDate) {
         this.editDate = editDate;
     }
 }
