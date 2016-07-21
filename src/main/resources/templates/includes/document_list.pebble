@@ -26,6 +26,10 @@
                     {{ document.name }}
                 </a>
 
+                <span class="text-muted">
+                    {{ document.editDate }}
+                </span>
+
                 <div class="pull-right">
                     <a href="view/{{ document.id }}" target="_blank" class="btn btn-default">
                         <i class="glyphicon glyphicon-eye-open"></i> View

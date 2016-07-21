@@ -45,6 +45,10 @@ public enum DocumentType {
      * @return Document type
      */
     public static DocumentType getByName(String name) {
+        if(name == null) {
+            return unknown;
+        }
+
         int dot = name.lastIndexOf('.');
         if(dot == -1) {
             return unknown;

@@ -133,7 +133,7 @@ public class IndexController {
             }
 
             try {
-                documentService.download(id, editorRequest.getKey(), editorRequest.getUrl());
+                documentService.download(id, editorRequest.getUrl());
             } catch(Exception ignored) {}
         }
 

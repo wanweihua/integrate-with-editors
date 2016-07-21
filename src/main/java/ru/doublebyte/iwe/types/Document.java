@@ -1,6 +1,7 @@
 package ru.doublebyte.iwe.types;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "documents")
@@ -18,6 +19,9 @@ public class Document {
 
     @Column(name = "type")
     private DocumentType type;
+
+    @Column(name = "edit_date")
+    private LocalDateTime editDate;
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -69,5 +73,13 @@ public class Document {
 
     public void setType(DocumentType type) {
         this.type = type;
+    }
+
+    public LocalDateTime getEditDate() {
+        return editDate;
+    }
+
+    public void setEditDate(LocalDateTime editDate) {
+        this.editDate = editDate;
     }
 }

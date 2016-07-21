@@ -10,6 +10,8 @@ import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import ru.doublebyte.iwe.repositories.DocumentRepository;
 import ru.doublebyte.iwe.types.Document;
 import ru.doublebyte.iwe.types.DocumentType;
@@ -18,6 +20,7 @@ import ru.doublebyte.iwe.types.DocumentWithData;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -46,14 +49,12 @@ public class DocumentService {
      * @param file Document file
      */
     public void upload(MultipartFile file) throws Exception {
-        String storageId = UUID.randomUUID().toString();
-        Document document = new Document(storageId, file.getOriginalFilename(),
-                DocumentType.getByName(file.getOriginalFilename()));
+        Document document = newDocument(file.getOriginalFilename());
 
         logger.info("Upload of document {}", document.toString());
 
         try {
-            save(storageId, file.getBytes());
+            save(document.getStorageId(), file.getBytes());
         } catch(Exception e) {
             logger.error("Document upload error", e);
             throw new Exception("Document upload error", e);
@@ -143,10 +144,9 @@ public class DocumentService {
     /**
      * Download edited document by URL
      * @param id Document id
-     * @param key Editing key (same as storage id)
      * @param url Download URL
      */
-    public void download(Long id, String key, String url) throws Exception {
+    public void download(Long id, String url) throws Exception {
         logger.info("Downloading document: {}", id);
 
         try {
@@ -155,10 +155,16 @@ public class DocumentService {
                 throw new Exception("Document not found: " + id);
             }
 
-            if(!document.getStorageId().equals(key)) {
-                throw new Exception(String.format("Key %s not equals to storage id %s of document %d",
-                        key, document.getStorageId(), id));
+            DocumentType resultType = getResultDocumentType(url);
+            if(!resultType.equals(document.getType())) {
+                logger.info("Document types mismatch. Creating new document. Old={}, New={}",
+                        document.getType().toString(), resultType.toString());
+                String newFileName = document.getName() + "." + resultType.toString();
+                document = newDocument(newFileName);
             }
+
+            document.setEditDate(LocalDateTime.now());
+            document = documentRepository.save(document);
 
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
@@ -178,15 +184,24 @@ public class DocumentService {
             Files.write(documentPath, response.getBody());
 
             logger.info("Document downloaded and saved: {}", id);
-
-            //TODO by document name in URL rename document in DB (e.g. odt -> docx)
         } catch(Exception e) {
             logger.error("Document download error", e);
-            throw new Error("Document download error", e);
+            throw new Exception("Document download error", e);
         }
     }
 
     ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Create document record
+     * @param fileName Document file name
+     * @return Record
+     */
+    protected Document newDocument(String fileName) {
+        String storageId = UUID.randomUUID().toString();
+        DocumentType documentType = DocumentType.getByName(fileName);
+        return new Document(storageId, fileName, documentType);
+    }
 
     /**
      * Check whether storage path exists
@@ -235,6 +250,17 @@ public class DocumentService {
     protected void deleteFile(String storageId) throws Exception {
         Files.delete(getDocumentPath(storageId));
         logger.info("Removed document with storage id {}", storageId);
+    }
+
+    /**
+     * Get result document type from URL
+     * @param url Document download URL
+     * @return Document type
+     */
+    protected DocumentType getResultDocumentType(String url) {
+        UriComponents uri = UriComponentsBuilder.fromUriString(url).build();
+        String resultFileName = uri.getQueryParams().getFirst("ooname");
+        return DocumentType.getByName(resultFileName);
     }
 
     ///////////////////////////////////////////////////////////////////////////
