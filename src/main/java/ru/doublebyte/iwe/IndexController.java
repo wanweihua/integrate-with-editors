@@ -15,6 +15,8 @@ import ru.doublebyte.iwe.types.DocumentWithData;
 import ru.doublebyte.iwe.types.EditorRequest;
 import ru.doublebyte.iwe.types.EditorResponse;
 
+import java.util.UUID;
+
 @Controller
 @RequestMapping("/")
 public class IndexController {
@@ -77,6 +79,7 @@ public class IndexController {
     ) {
         model.addAttribute("editors_url", editorsUrl);
         model.addAttribute("self_url", selfUrl);
+        model.addAttribute("edit_key", UUID.randomUUID().toString());
         model.addAttribute("document", documentService.get(id));
         return "edit";
     }

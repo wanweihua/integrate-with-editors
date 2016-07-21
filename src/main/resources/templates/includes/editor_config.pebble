@@ -1,0 +1,23 @@
+<script>
+    var config = {
+        documentType: "{{ document.type.editorType }}",
+        height: "100%",
+        width: "100%",
+        type: "desktop",
+
+        document: {
+            fileType: "{{ document.type }}",
+            title: "{{ document.name }}",
+            url: "{{ self_url }}/get/{{ document.id }}",
+            key: "{{ edit_key }}"
+        },
+
+        editorConfig: {
+            lang: "ru",
+            mode: "edit",
+            callbackUrl: "{{ self_url }}/notify/{{ document.id }}"
+        }
+    };
+
+    var editor = new DocsAPI.DocEditor("editor", config);
+</script>

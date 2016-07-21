@@ -171,7 +171,7 @@ public class DocumentService {
             ResponseEntity<byte[]> response = restTemplate.exchange(url, HttpMethod.GET, request, byte[].class);
 
             if(!response.getStatusCode().equals(HttpStatus.OK)) {
-                throw new Exception("Failed to download doucument: " + id);
+                throw new Exception("Failed to download document: " + id);
             }
 
             Path documentPath = getDocumentPath(document.getStorageId());

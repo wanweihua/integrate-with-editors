@@ -15,43 +15,14 @@
 
     {% if not document is empty %}
         <style>
-            body {
-                margin: 0;
-                padding: 0;
-            }
-            .editor {
-                position: absolute;
-                height: 100%;
-                width: 100%;
-            }
+            body {  margin: 0;  padding: 0;  }
+            .editor {  position: absolute;  height: 100%;  width: 100%;  }
         </style>
 
         <div class="editor">
             <div id="editor"></div>
         </div>
 
-        <script>
-            var config = {
-                documentType: "{{ document.type.editorType }}",
-                height: "100%",
-                width: "100%",
-                type: "desktop",
-
-                document: {
-                    fileType: "{{ document.type }}",
-                    title: "{{ document.name }}",
-                    url: "{{ self_url }}/get/{{ document.id }}",
-                    key: "{{ document.storageId }}"
-                },
-
-                editorConfig: {
-                    lang: "ru",
-                    mode: "edit",
-                    callbackUrl: "{{ self_url }}/notify/{{ document.id }}"
-                }
-            };
-
-            var editor = new DocsAPI.DocEditor("editor", config);
-        </script>
+        {% include "includes/editor_config" %}
     {% endif %}
 {% endblock %}
