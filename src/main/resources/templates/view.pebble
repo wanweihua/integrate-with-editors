@@ -1,0 +1,28 @@
+{% extends "layouts/editor" %}
+
+{% block libs %}
+    <script src="{{ editors_url }}/web-apps/apps/api/documents/api.js"></script>
+{% endblock %}
+
+{% block title %}
+    View {{ document.name }}
+{% endblock %}
+
+{% block content %}
+    {% if document is empty %}
+        <strong>Document not found.</strong>
+    {% endif %}
+
+    {% if not document is empty %}
+        <style>
+            body {  margin: 0;  padding: 0;  }
+            .viewer {  position: absolute;  height: 100%;  width: 100%;  }
+        </style>
+
+        <div class="viewer">
+            <div id="viewer"></div>
+        </div>
+
+        {% include "includes/viewer_config" %}
+    {% endif %}
+{% endblock %}

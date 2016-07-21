@@ -84,6 +84,18 @@ public class IndexController {
         return "edit";
     }
 
+    @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
+    public String view(
+            @PathVariable("id") Long id,
+            Model model
+    ) {
+        model.addAttribute("editors_url", editorsUrl);
+        model.addAttribute("self_url", selfUrl);
+        model.addAttribute("view_key", UUID.randomUUID().toString());
+        model.addAttribute("document", documentService.get(id));
+        return "view";
+    }
+
     @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<?> get(

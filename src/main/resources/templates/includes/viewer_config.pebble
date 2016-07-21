@@ -9,15 +9,14 @@
             fileType: "{{ document.type }}",
             title: "{{ document.name }}",
             url: "{{ self_url }}/get/{{ document.id }}",
-            key: "{{ edit_key }}"
+            key: "{{ view_key }}"
         },
 
         editorConfig: {
             lang: "en",
-            mode: "edit",
-            callbackUrl: "{{ self_url }}/notify/{{ document.id }}"
+            mode: "view"
         }
     };
 
-    var editor = new DocsAPI.DocEditor("editor", config);
+    var editor = new DocsAPI.DocEditor("viewer", config);
 </script>
